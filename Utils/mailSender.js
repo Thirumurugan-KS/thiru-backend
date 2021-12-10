@@ -1,6 +1,6 @@
 const nodemailer =  require("nodemailer");
 
-async function mailSender(value){
+exports.mailSend = async(value)=>{
 
     var transport = nodemailer.createTransport({
         host: "smtp.mailtrap.io",
@@ -11,7 +11,7 @@ async function mailSender(value){
         }
       });
 
-     return await transporter.sendMail({
+     return await transport.sendMail({
         from: value.fromMail, // sender address
         to: value.toMail, // list of receivers
         subject: value.subject, // Subject line

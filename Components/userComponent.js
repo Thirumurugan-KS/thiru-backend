@@ -1,7 +1,8 @@
 const cloudinary = require("cloudinary").v2
-const {mailSender} = require("../Utils/mailSender")
+const { mailSend } = require("../Utils/mailSender")
 const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken");
+const User = require("../Models/userModel")
 
 cloudinary.config({
     cloud_name : 'dirl9qdbz',
@@ -9,13 +10,15 @@ cloudinary.config({
     api_secret : '0Tzbzs-pqoH3jlAelvnwNEl7eRg'
 })
 
-const User = require("../Models/userModel")
 
 // signup 
 exports.signUp = async (req,res) => {
     
+   try{
+
     const { name , email , password , phonenumber } = req.body
     const user = await User.create({name , email , password , phonenumber})
+    console.log(user)
     if(user){
         let cloud = await cloudinary.uploader.upload(req.files.photo.tempFilePath , {
             folder : "profile"
@@ -29,6 +32,10 @@ exports.signUp = async (req,res) => {
     else{
         res.send("Already user present")
     }
+   }
+   catch(error){
+       console.log("Error occured")
+   }
 }
 
 // signin
@@ -98,7 +105,7 @@ exports.forgetPassword = async(req,res) => {
 
     forgetToken = await user.forgetToken()
 
-    await user.save({ validateBeforeSave: false })
+    await user.save()
 
     let value = {
         fromMail : "admin@ecom.com",
@@ -108,7 +115,7 @@ exports.forgetPassword = async(req,res) => {
         html : `<a href='http://localhost:8080/password/reset/${forgetToken}'> <button>Click Me</button></a>`
     }
 
-    let mail =  mailSender(value)
+    let mail =  mailSend(value)
 
     res.json({
         status : "Ok"
