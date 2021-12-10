@@ -7,6 +7,6 @@ mongoose.connect('mongodb+srv://thiru:thiru@cluster0.xoecv.mongodb.net/myFirstDa
     console.log('DB Connected')
 });
 
-app.listen(8080 , ()=>{
+app.listen( process.env.PORT || 8080 , ()=>{
     console.log('Server is up')
 })
