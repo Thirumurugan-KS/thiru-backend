@@ -8,7 +8,7 @@ const router = express.Router()
 //Routes
 
 //Home Route
-router.route("/home").get(home)
+router.route("/").get(home)
 
 //User Route
 router.route("/signup").post(signUp)
